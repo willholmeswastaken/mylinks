@@ -11,7 +11,9 @@ export default function handler(
 ) {
     if(req.method !== 'POST') res.status(404)
     else{
-        // todo: save user profile link visit to db.
+        // todo:
+        // check that the user profile exists, if not return badrequest
+        // add user profile visit to db.
         res.status(200).json({ name: 'John Doe' })
     }
 }
