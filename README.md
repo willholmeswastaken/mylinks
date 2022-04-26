@@ -4,6 +4,10 @@ A web app to host all of your links on.
 ## Why am i building this?
 To improve my abilities with nextjs, typescript, db design and to play around with go and see if it's a language i'm interested in learning further.
 
+## Related Repos
+[User Profile Visit Lambda](https://github.com/willholmeswastaken/mylinks-userprofilevisit-lambda)
+[User Profile Link Visit Lambda](https://github.com/willholmeswastaken/mylinks-userprofilelinkvisit-lambda)
+
 Todo Pre-MVP:
 - [x] Create project
 - [x] Add tailwind
