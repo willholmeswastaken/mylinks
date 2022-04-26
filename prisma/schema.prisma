@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model UserProfile {
+  id String @id @default(uuid())
+  username String @unique
+  email String @unique
+  bio String?
+  links UserProfileLink[]
+  visits UserProfileVisit[]
+  isDeleted Boolean @default(false)
+  isDisabled Boolean @default(false)
+  joinedOn DateTime @default(now())
+}
+
+model UserProfileLink {
+  id String @id @default(uuid())
+  userprofile UserProfile @relation(fields: [userProfileId], references: [id])
+  userProfileId String
+  linkUrl String
+  linkType LinkType @relation(fields: [linkTypeId], references: [id])
+  linkTypeId String
+  visits UserProfileLinkVisit[]
+}
+
+model UserProfileVisit {
+  id String @id @default(uuid())
+  userProfile UserProfile @relation(fields: [userProfileId], references: [id])
+  userProfileId String
+  visitMetadata String?
+  country String?
+  device String?
+  visitedAt DateTime @default(now())
+}
+
+model UserProfileLinkVisit {
+  id String @id @default(uuid())
+  userProfileLink UserProfileLink @relation(fields: [userProfileLinkId], references: [id])
+  userProfileLinkId String
+  visitMetadata String?
+  country String?
+  device String?
+  visitedAt DateTime @default(now())
+}
+
+model LinkType {
+  id String @id @default(uuid())
+  name String
+  imageUrl String
+  userProfileLinks UserProfileLink[]
+  isAvailable Boolean @default(false)
+}
