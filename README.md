@@ -6,9 +6,10 @@ To improve my abilities with nextjs, typescript, db design and to play around wi
 
 ## Related Repos
 [User Profile Visit Lambda](https://github.com/willholmeswastaken/mylinks-userprofilevisit-lambda)
+
 [User Profile Link Visit Lambda](https://github.com/willholmeswastaken/mylinks-userprofilelinkvisit-lambda)
 
-Todo Pre-MVP:
+## Todo Pre-MVP:
 - [x] Create project
 - [x] Add tailwind
 - [ ] Create Layout page
