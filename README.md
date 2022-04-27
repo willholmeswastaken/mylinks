@@ -19,7 +19,7 @@ To improve my abilities with nextjs, typescript, db design and to play around wi
 - [ ] Create manage profile page
 - [x] Create databases
 - [x] Create SQS queues
-- [ ] Create queue handlers in lambda
+- [x] Create queue handlers in lambda
 - [ ] Hookup manage profile page to interact with db
 - [ ] Hookup shareable profile page to pull from db
 - [ ] Hookup profile page visits and link clicks to trigger sqs message
