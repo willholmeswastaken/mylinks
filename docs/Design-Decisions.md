@@ -32,33 +32,15 @@ sequenceDiagram
 ```
 
 ## User profile visit lambda flow
-Note: Currently i am just doing a http request from the go handler to a next endpoint. In the future I would like to do all the work including the sql query inside of the handler. But for simplicity right now I want to do it this way.
-
 ```mermaid
 sequenceDiagram
     participant UserProfileVisitQueue
     participant UserProfileVisitQueueHandler
-    participant UserProfileVisitApi
+    participant UserProfileVisitDb
     UserProfileVisitQueue->>UserProfileVisitQueueHandler: Send message to handler
-    UserProfileVisitQueueHandler->>UserProfileVisitApi: Send a visit log payload to api
-    UserProfileVisitApi-->>UserProfileVisitQueueHandler: Added!
+    UserProfileVisitQueueHandler->>UserProfileVisitDb: Add a visit to the user profile in the database
+    UserProfileVisitDb-->>UserProfileVisitQueueHandler: Added!
     UserProfileVisitQueueHandler-->>UserProfileVisitQueue: Done.
-```
-
-## User profile visit api
-```mermaid
-sequenceDiagram
-    participant UserProfileVisitRequest
-    participant UserProfileVisitApi
-    participant PlanetScaleDb
-    UserProfileVisitRequest->>UserProfileVisitApi: Incoming request
-    UserProfileVisitApi->>PlanetScaleDb: Does user profile exist?
-    alt yes
-    PlanetScaleDb-->>UserProfileVisitApi: Yes, adding a visit.
-    else no
-    PlanetScaleDb-->>UserProfileVisitApi: No, not adding a visit.
-    end
-    UserProfileVisitApi-->>UserProfileVisitRequest: Return response
 ```
 
 ## Link page profile link visit flow
@@ -67,41 +49,23 @@ sequenceDiagram
     participant UserProfilePage
     participant VisitLinkApi
     participant UserProfileLinkVisitQueue
-    participant PlanetScaleDb
+    participant UserProfileLinkVisitDb
     UserProfilePage->>VisitLinkApi: Link clicked
     VisitLinkApi->>UserProfileLinkVisitQueue: Queue a visit log message
     UserProfileLinkVisitQueue-->>VisitLinkApi: Queued up!
-    VisitLinkApi->>PlanetScaleDb: User profile link db query
-    PlanetScaleDb-->>VisitLinkApi: User profile link db query response
+    VisitLinkApi->>UserProfileLinkVisitDb: User profile link db query
+    UserProfileLinkVisitDb-->>VisitLinkApi: User profile link db query response
     VisitLinkApi-->>UserProfilePage: Return redirect to link
 ```
 
 ## User profile link visit lambda flow
-Note: Currently i am just doing a http request from the go handler to a next endpoint. In the future I would like to do all the work including the sql query inside of the handler. But for simplicity right now I want to do it this way.
-
 ```mermaid
 sequenceDiagram
     participant UserProfileLinkVisitQueue
     participant UserProfileLinkVisitQueueHandler
-    participant UserProfileLinkVisitApi
+    participant UserProfileLinkVisitDb
     UserProfileLinkVisitQueue->>UserProfileLinkVisitQueueHandler: Send message to handler
-    UserProfileLinkVisitQueueHandler->>UserProfileLinkVisitApi: Send a link visit log payload to api
-    UserProfileLinkVisitApi-->>UserProfileLinkVisitQueueHandler: Added!
+    UserProfileLinkVisitQueueHandler->>UserProfileLinkVisitDb: Add a visit to the user profile link in the database
+    UserProfileLinkVisitDb-->>UserProfileLinkVisitQueueHandler: Added!
     UserProfileLinkVisitQueueHandler-->>UserProfileLinkVisitQueue: Done.
-```
-
-## User profile link visit api
-```mermaid
-sequenceDiagram
-    participant UserProfileLinkVisitRequest
-    participant UserProfileLinkVisitApi
-    participant PlanetScaleDb
-    UserProfileLinkVisitRequest->>UserProfileLinkVisitApi: Incoming request
-    UserProfileLinkVisitApi->>PlanetScaleDb: Does user profile link exist?
-    alt yes
-    PlanetScaleDb-->>UserProfileLinkVisitApi: Yes, adding a visit.
-    else no
-    PlanetScaleDb-->>UserProfileLinkVisitApi: No, not adding a visit.
-    end
-    UserProfileLinkVisitApi-->>UserProfileLinkVisitRequest: Return response
 ```
