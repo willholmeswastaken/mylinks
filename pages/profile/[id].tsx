@@ -1,16 +1,9 @@
 import { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../../db";
-
-interface UserInfoViewModel {
-    readonly id: string;
-    readonly username: string;
-    readonly email: string;
-    readonly bio: string | null;
-}
+import { UserInfoViewModel } from "../../models/UserInfoViewModel";
 
 interface ProfilePageProps {
-    readonly statusCode: number;
-    readonly userInfo: UserInfoViewModel;
+  readonly userInfo: UserInfoViewModel;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({
@@ -18,41 +11,33 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
 }) => {
   const profileId = params?.id!.toString().toLowerCase() ?? "";
-  let statusCode = 200;
-  if (!profileId) {
-    return {
-        redirect: {
-          destination: '/404',
-        },
-        props: {},
-      };
-  }
+  if (!profileId) return redirectNotFound();
+
   const userProfile = await prisma.userProfile.findUnique({
     where: {
       username: profileId,
     },
   });
-  if (!userProfile) {
-    return {
-        redirect: {
-          destination: '/404',
-        },
-        props: {},
-      };
-  }
-  const userInfo: UserInfoViewModel = {
-      id: userProfile.id,
-      username: userProfile.username,
-      email: userProfile.email,
-      bio: userProfile.bio
-  };
+  if (!userProfile) return redirectNotFound();
 
-  console.log(userInfo)
+  const userInfo: UserInfoViewModel = {
+    id: userProfile.id,
+    username: userProfile.username,
+    email: userProfile.email,
+    bio: userProfile.bio,
+  };
 
   return {
-    props: { userInfo, statusCode },
+    props: { userInfo },
   };
 };
+
+const redirectNotFound = () => ({
+  redirect: {
+    destination: "/404",
+  },
+  props: {},
+});
 
 const Profile: NextPage<ProfilePageProps> = ({ userInfo }) => {
   return <div>Hello {userInfo.username}</div>;
