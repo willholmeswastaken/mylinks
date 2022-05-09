@@ -1,15 +1,19 @@
+import { SendMessageCommand, SendMessageCommandOutput } from "@aws-sdk/client-sqs";
 import { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../../db";
 import { UserInfoViewModel } from "../../models/UserInfoViewModel";
+import { sqsClient } from "../../sqsClient";
 
 interface ProfilePageProps {
   readonly userInfo: UserInfoViewModel;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  req,
-}) => {
+interface VisitMessage {
+    readonly UserProfileId: string;
+	readonly VisitMetadata: string;
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const profileId = params?.id!.toString().toLowerCase() ?? "";
   if (!profileId) return redirectNotFound();
 
@@ -19,6 +23,15 @@ export const getServerSideProps: GetServerSideProps = async ({
     },
   });
   if (!userProfile) return redirectNotFound();
+
+  try {
+      const visit: VisitMessage = { UserProfileId: userProfile.id, VisitMetadata: ''};
+      console.log('Sending message');
+      const messageResult: SendMessageCommandOutput = await sqsClient.send(new SendMessageCommand({ MessageBody: JSON.stringify(visit), QueueUrl: process.env.AWS_SQS_PROFILE_VISIT_QUEUE_URL}))
+      console.log(`Sent message with id ${messageResult.MessageId}`);
+  } catch(err) {
+      console.error(err);
+  }
 
   const userInfo: UserInfoViewModel = {
     id: userProfile.id,
