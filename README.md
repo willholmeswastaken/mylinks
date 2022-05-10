@@ -1,6 +1,8 @@
 # MyLinks
 A web app to host all of your links on.
 
+Update 10/05/2022 - No longer interested in doing much more on this project. I feel that I played about with Go but I don't have a lot of interest in a links portal. Glad I got to experiment.
+
 ## Why am i building this?
 To improve my abilities with nextjs, typescript, db design and to play around with go and see if it's a language i'm interested in learning further.
 
